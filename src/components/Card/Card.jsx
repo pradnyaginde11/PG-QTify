@@ -67,17 +67,18 @@
 
 // export default AlbumCard;
 
+// Card.jsx
 import React from "react";
 import { Card, CardMedia, CardContent, Typography, Chip } from "@mui/material";
 
-const AlbumCard = ({ image, title, follows }) => {
+const AlbumCard = ({ image, title, follows, isSong = false }) => {
   return (
     <Card
       sx={{
         borderRadius: 2,
         overflow: "hidden",
-        backgroundColor: "#FFFF",
-        color: "#121212",
+        backgroundColor: "#121212",
+        color: "#fff",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -88,28 +89,23 @@ const AlbumCard = ({ image, title, follows }) => {
         component="img"
         image={image}
         alt={title}
-        sx={{
-          objectFit: "cover",
-          height: 160,
-        }}
+        sx={{ objectFit: "cover", height: 160 }}
       />
       <CardContent
         sx={{
           display: "flex",
-           flexDirection: "column", 
-          //  justifyContent: "space-between",
-           alignItems: "flex-start",
-           gap: 0.5, 
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: 0.5,
           padding: "8px 12px !important",
         }}
       >
-        
         <Chip
-          label={`${follows} Follows`}
+          label={`${follows} ${isSong ? "Likes" : "Follows"}`}
           size="small"
           sx={{
-            backgroundColor: "#121212",
-            color: "#FFFF",
+            backgroundColor: "#34C94B",
+            color: "#000",
             fontWeight: 500,
             fontSize: "0.75rem",
             height: 24,
@@ -117,23 +113,11 @@ const AlbumCard = ({ image, title, follows }) => {
         />
         <Typography
           variant="subtitle1"
-          sx={{ fontSize: "0.9rem", 
-            backgroundColor: "#121212" , 
-            color: "#FFFF",
-
-             display: "flex",
-           flexDirection: "column", 
-          //  justifyContent: "space-between",
-           alignItems: "flex-start",
-           gap: 0.5, 
-           padding: "5px"
-
-           }}
+          sx={{ fontSize: "0.9rem", fontWeight: 600, color: "#fff" }}
         >
           {title}
         </Typography>
       </CardContent>
-      
     </Card>
   );
 };

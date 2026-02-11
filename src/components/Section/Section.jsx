@@ -117,29 +117,48 @@
 
 // export default Section;
 
+// Section.jsx
 import React, { useEffect, useState } from "react";
-import { Grid, Button, Typography } from "@mui/material";
+import { Grid, Button, Typography, Tabs, Tab } from "@mui/material";
 import AlbumCard from "../Card/Card";
 import Carousel from "../Carousel/Carousel";
 
-const Section = ({ title, endpoint }) => {
-  const [albums, setAlbums] = useState([]);
+const Section = ({ title, endpoint, isSongs = false }) => {
+  const [items, setItems] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState("All");
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch(endpoint);
         const data = await response.json();
-        setAlbums(data);
+        setItems(data);
+
+        if (isSongs) {
+          const genreResponse = await fetch("https://qtify-backend.labs.crio.do/genres");
+          const genreData = await genreResponse.json();
+          console.log("Genre API response:", genreData);
+
+          setGenres([{ key: "All", label: "All" }, ...genreData.data]);
+
+        }
       } catch (error) {
-        console.error("Error fetching albums:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchAlbums();
-  }, [endpoint]);
+    fetchData();
+  }, [endpoint, isSongs]);
 
-  const displayedAlbums = showAll ? albums : albums.slice(0, 7);
+  // Filter songs by genre
+  const filteredItems = isSongs
+    ? selectedGenre === "All"
+      ? items
+      : items.filter((song) => song.genre.key === selectedGenre)
+    : items;
+
+  const displayedItems = showAll ? filteredItems : filteredItems.slice(0, 7);
 
   return (
     <div style={{ margin: "20px" }}>
@@ -147,18 +166,91 @@ const Section = ({ title, endpoint }) => {
         <Typography variant="h6" sx={{ fontWeight: 600, color: "white" }}>
           {title}
         </Typography>
-        <Button
-          variant="text"
-          sx={{ color: "#34C94B", textTransform: "none" }}
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll ? "Collapse" : "Show All"}
-        </Button>
+
+        {!isSongs && (
+          <Button
+            variant="text"
+            sx={{ color: "#34C94B", textTransform: "none" }}
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? "Collapse" : "Show All"}
+          </Button>
+        )}
       </Grid>
 
-      {showAll ? (
+      {isSongs && (
+        // <Tabs
+        //   value={selectedGenre}
+        //   onChange={(e, newValue) => setSelectedGenre(newValue)}
+        //   textColor="#FFFF"
+        //   indicatorColor="#34C94B"
+        //   sx={{
+        //     "& .MuiTab-root": {
+        //       color: "#fff",
+        //       textTransform: "none",
+        //       fontWeight: 500,
+        //       marginRight: "12px",
+        //       borderRadius: "16px",
+        //       backgroundColor: "#121212",
+        //     },
+        //     "& .Mui-selected": {
+        //      backgroundColor: "#121212",
+        //       color: "#FFFF",
+        //     },
+        //   }}
+        // >
+        //   {genres.map((genre) => (
+        //     <Tab key={genre.key} value={genre.key} label={genre.label} />
+        //   ))}
+        // </Tabs>
+       <Tabs
+          value={selectedGenre}
+          onChange={(e, newValue) => setSelectedGenre(newValue)}
+          indicatorColor="primary" // keep this as "primary"
+          textColor="inherit"
+          sx={{
+            "& .MuiTabs-indicator": {
+              backgroundColor: "#34C94B", // 👈 custom color here
+              height: "3px",              // optional thickness
+              borderRadius: "2px",        // optional rounded edges
+            },
+            "& .MuiTab-root": {
+              color: "#fff",
+              textTransform: "none",
+              fontWeight: 500,
+              marginRight: "12px",
+              borderRadius: "16px",
+              backgroundColor: "#121212",
+            },
+            "& .Mui-selected": {
+              // backgroundColor: "#34C94B",
+              // color: "#000",
+            },
+            marginBottom: "20px"
+            
+          }}
+        >
+          {genres.map((genre) => (
+            <Tab key={genre.key} value={genre.key} label={genre.label} />
+          ))}
+        </Tabs>
+      )}
+
+      {isSongs ? (
+        <Carousel
+          items={filteredItems}
+          renderItem={(song) => (
+            <AlbumCard
+              image={song.image}
+              title={song.title}
+              follows={song.likes} // show Likes instead of Follows
+              isSong
+            />
+          )}
+        />
+      ) : showAll ? (
         <Grid container spacing={2}>
-          {displayedAlbums.map((album) => (
+          {displayedItems.map((album) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={album.id}>
               <AlbumCard
                 image={album.image}
@@ -170,7 +262,7 @@ const Section = ({ title, endpoint }) => {
         </Grid>
       ) : (
         <Carousel
-          items={albums}
+          items={items}
           renderItem={(album) => (
             <AlbumCard
               image={album.image}
