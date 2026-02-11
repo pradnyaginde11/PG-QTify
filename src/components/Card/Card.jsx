@@ -115,9 +115,7 @@ const AlbumCard = ({ image, title, follows }) => {
             height: 24,
           }}
         />
-        
-      </CardContent>
-      <Typography
+        <Typography
           variant="subtitle1"
           sx={{ fontSize: "0.9rem", 
             backgroundColor: "#121212" , 
@@ -134,6 +132,8 @@ const AlbumCard = ({ image, title, follows }) => {
         >
           {title}
         </Typography>
+      </CardContent>
+      
     </Card>
   );
 };
