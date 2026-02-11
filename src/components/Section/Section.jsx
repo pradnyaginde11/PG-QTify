@@ -120,6 +120,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
 import AlbumCard from "../Card/Card";
+import Carousel from "../Carousel/Carousel";
 
 const Section = ({ title, endpoint }) => {
   const [albums, setAlbums] = useState([]);
@@ -135,7 +136,6 @@ const Section = ({ title, endpoint }) => {
         console.error("Error fetching albums:", error);
       }
     };
-
     fetchAlbums();
   }, [endpoint]);
 
@@ -156,17 +156,30 @@ const Section = ({ title, endpoint }) => {
         </Button>
       </Grid>
 
-      <Grid container spacing={2}>
-        {displayedAlbums.map((album) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={album.id}>
+      {showAll ? (
+        <Grid container spacing={2}>
+          {displayedAlbums.map((album) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={album.id}>
+              <AlbumCard
+                image={album.image}
+                title={album.title}
+                follows={album.follows}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Carousel
+          items={albums}
+          renderItem={(album) => (
             <AlbumCard
               image={album.image}
               title={album.title}
               follows={album.follows}
             />
-          </Grid>
-        ))}
-      </Grid>
+          )}
+        />
+      )}
     </div>
   );
 };
