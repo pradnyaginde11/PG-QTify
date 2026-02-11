@@ -10,8 +10,10 @@ function App() {
     <div className="App">
       <Navbar />
       <Hero />
-      <Section title="Top Albums" />
-      <Section title="New Albums" />
+      {/* <Section title="Top Albums" />
+      <Section title="New Albums" /> */}
+      <Section title="Top Albums" endpoint="https://qtify-backend.labs.crio.do/albums/top" />
+      <Section title="New Albums" endpoint="https://qtify-backend.labs.crio.do/albums/new" />
       {/* <header className="App-header">
         
       </header> */}
