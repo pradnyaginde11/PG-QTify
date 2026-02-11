@@ -1,0 +1,56 @@
+:root {
+  --color-black: #121212;
+  --color-green: #34C94B; /* from Figma */
+}
+
+.card {
+  width: 159px; /* adjust as per design */
+  height: 232px;
+  border: 1px solid var(--color-green);
+  border-radius: 10px;
+  overflow: hidden; /* ensures image doesn’t overflow */
+  background-color: var(--color-black);
+  display: flex;
+  flex-direction: column;
+}
+
+.albumImage {
+  width: 100%;
+  height: 150px;
+  object-fit: cover; /* keeps image ratio */
+}
+
+.cardBottom {
+  padding: 5px;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
+}
+
+.albumInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.albumName {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  /* font-weight: 600; */
+  color: #FFFF;
+  background-color: #121212;
+  margin: 0;
+  width: 100%;
+  height: 90px;
+}
+
+.chip {
+  background-color: var(--color-green) !important;
+  color: var(--color-black) !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 10px !important;
+  height: 24px !important; /* control chip size */
+  padding: 0 8px !important;
+}
